@@ -1,0 +1,49 @@
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\wpfHelixTest.exe.config
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\wpfHelixTest.exe
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\wpfHelixTest.pdb
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.dll
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.Wpf.dll
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.pdb
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.xml
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.Wpf.pdb
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.Wpf.xml
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.csprojResolveAssemblyReference.cache
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\MainWindow.g.cs
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\App.g.cs
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest_MarkupCompile.cache
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest_MarkupCompile.lref
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\MainWindow.baml
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.g.resources
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.Properties.Resources.resources
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.csproj.GenerateResource.Cache
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.csproj.CoreCompileInputs.cache
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.exe
+C:\Users\Heitor Araujo\Desktop\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\wpfHelixTest.exe.config
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\wpfHelixTest.exe
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\wpfHelixTest.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\ColorPickerWPF.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.Wpf.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\WriteableBitmapEx.Wpf.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.Wpf.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\HelixToolkit.Wpf.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\WriteableBitmapEx.Wpf.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\WriteableBitmapEx.Wpf.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\MainWindow.g.cs
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\App.g.cs
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest_MarkupCompile.cache
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest_MarkupCompile.lref
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\MainWindow.baml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.g.resources
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.Properties.Resources.resources
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.csproj.GenerateResource.Cache
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.csproj.CoreCompileInputs.cache
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.exe
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelixTest.csprojResolveAssemblyReference.cache
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\OpenTK.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\OpenTK.GLControl.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\RabbitMQ.Client.xml
