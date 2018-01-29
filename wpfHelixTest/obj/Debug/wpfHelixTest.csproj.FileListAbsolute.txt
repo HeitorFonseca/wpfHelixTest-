@@ -47,3 +47,17 @@ C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\wpfHelix
 C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\OpenTK.dll
 C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\OpenTK.GLControl.dll
 C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\RabbitMQ.Client.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\InteractiveDataDisplay.WPF.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\Microsoft.Maps.MapControl.WPF.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Core.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Interfaces.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Linq.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.PlatformServices.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Windows.Threading.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\InteractiveDataDisplay.WPF.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\Microsoft.Maps.MapControl.WPF.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Core.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Interfaces.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Linq.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.PlatformServices.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Windows.Threading.xml

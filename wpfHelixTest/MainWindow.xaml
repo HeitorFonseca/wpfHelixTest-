@@ -3,54 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
         xmlns:helix="http://helix-toolkit.org/wpf"
 
         xmlns:local="clr-namespace:wpfHelixTest"
         mc:Ignorable="d"
         Title="MainWindow" Height="400" Width="800" MinHeight="400" MinWidth="600">
 
+
     <Grid x:Name="MainWindow1" >
-        <helix:HelixViewport3D x:Name="viewPort3d"  Margin="114,62,220.333,20.667" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" MinWidth="150" MaxWidth="800" MinHeight="212" >
-            <!-- Remember to add light to the scene -->
-            <helix:DefaultLights/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="19*"/>
+            <RowDefinition/>
+            <RowDefinition Height="351*"/>
+        </Grid.RowDefinitions>
 
-        </helix:HelixViewport3D>
-        <Grid>
-            <Button x:Name="loadStl_btn" Content="Load Stl Model"  HorizontalAlignment="Left" Margin="10,0,0,269.667" VerticalAlignment="bottom" Width="80" Click="LoadStlBntClick" FontSize="9"/>
-            <Button x:Name="loadSensors_btn" Content="Load sensors" HorizontalAlignment="Left" Margin="10,0,0,248.667" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" Click="LoadSensorsBtnClick" FontSize="9"/>
-            <Button x:Name="start_btn" Content="Start" HorizontalAlignment="Left" Margin="10,0,0,227.667" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9" Click="StartBtnClick"/>
-            <Button x:Name="stop_btn" Content="Stop" HorizontalAlignment="Left" Margin="10,0,0,206.667" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
-            <Button x:Name="exportCsv_btn" Content="Export csv" HorizontalAlignment="Left" Margin="10,0,0,185.667" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
-            <Button x:Name="exportTxt_btn" Content="Export txt" HorizontalAlignment="Left" Margin="10,0,0,164.667" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
-            
-            <TabControl HorizontalAlignment="Left" Height="100" Margin="254,148,0,0" VerticalAlignment="Top" Width="194">
-                <TabItem Header="TabItem">
-                    <Grid Background="#FFE5E5E5"/>
-                </TabItem>
-                <TabItem Header="TabItem">
-                    <Grid Background="#FFE5E5E5"/>
-                </TabItem>
-            </TabControl>
-            
-        </Grid>
-        <DataGrid x:Name="SensorsInfoDataGrid" Margin="0,62,10.333,20.667" HorizontalAlignment="Right" VerticalAlignment="Stretch" Height="Auto" Width="Auto" RenderTransformOrigin="0.5,0.5" MaxWidth="400" FontSize="9">
-
-            <DataGrid.Resources>
-                <Style TargetType="{x:Type DataGridColumnHeader}" >
-                    <Setter Property="BorderThickness" Value="0,0,1,2"></Setter>
-                    <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
-                </Style>
-            </DataGrid.Resources>
-
-            <DataGrid.Columns>
-                <DataGridTextColumn Header=" " Binding="{Binding Name}" Width="48" FontSize="8"/>
-                <DataGridTextColumn Header="X" Binding="{Binding x}" Width="30" FontSize="8"/>
-                <DataGridTextColumn Header="Y" Binding="{Binding y}" Width="30" FontSize="8"/>
-                <DataGridTextColumn Header="Z" Binding="{Binding z}" Width="30" FontSize="8"/>
-                <DataGridTextColumn Header="Delta Z" Binding="{Binding deltaZ}" Width="50" FontSize="8"/>
-
-            </DataGrid.Columns>
-        </DataGrid>
         <DockPanel HorizontalAlignment="Stretch" Height="18" LastChildFill="False" VerticalAlignment="Top" Margin="0,0,0.333,0">
             <Menu Name="MainMenu" Height="20" VerticalAlignment="Top" DockPanel.Dock="Top" >
                 <MenuItem Header="File" Name="MenuFile">
@@ -61,17 +28,71 @@
                 <MenuItem Header="View" Name="MenuView"/>
             </Menu>
         </DockPanel>
+
+        <TabControl HorizontalAlignment="Left" Margin="0,2,0,-0.333" Width="793" Grid.Row="2" ContextMenuClosing="PlayBtnClick">
+            <TabItem Header="TabItem">
+                <Grid Margin="0,0,-0.667,0.333">
+                    <helix:HelixViewport3D x:Name="viewPort3d"  Margin="114,62,220,15" MinWidth="150" MaxWidth="800" MinHeight="212" >
+                        <!-- Remember to add light to the scene -->
+                        <helix:DefaultLights/>
+
+                    </helix:HelixViewport3D>
+                    <Grid Height="324" VerticalAlignment="Top" Margin="0,0,0,-3" HorizontalAlignment="Left" Width="789">
+                        <Button x:Name="loadStl_btn" Content="Load Stl Model"  HorizontalAlignment="Left" Margin="8,0,0,198" VerticalAlignment="bottom" Width="80" Click="LoadStlBntClick" FontSize="9"/>
+                        <Button x:Name="loadSensors_btn" Content="Load sensors" HorizontalAlignment="Left" Margin="8,0,0,177" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" Click="LoadSensorsBtnClick" FontSize="9"/>
+                        <Button x:Name="start_btn" Content="Start" HorizontalAlignment="Left" Margin="8,0,0,156" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9" Click="StartBtnClick"/>
+                        <Button x:Name="stop_btn" Content="Stop" HorizontalAlignment="Left" Margin="8,0,0,135" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
+                        <Button x:Name="exportCsv_btn" Content="Export csv" HorizontalAlignment="Left" Margin="8,0,0,114" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
+                        <Button x:Name="exportTxt_btn" Content="Export txt" HorizontalAlignment="Left" Margin="8,0,0,93" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
+                    </Grid>
+                    <DataGrid x:Name="SensorsInfoDataGrid" Margin="0,62,10.333,20.667" HorizontalAlignment="Right" VerticalAlignment="Stretch" Height="Auto" Width="Auto" RenderTransformOrigin="0.5,0.5" MaxWidth="400" FontSize="9">
+
+                        <DataGrid.Resources>
+                            <Style TargetType="{x:Type DataGridColumnHeader}" >
+                                <Setter Property="BorderThickness" Value="0,0,1,2"></Setter>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                            </Style>
+                        </DataGrid.Resources>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header=" " Binding="{Binding Name}" Width="48" FontSize="8"/>
+                            <DataGridTextColumn Header="X" Binding="{Binding x}" Width="30" FontSize="8"/>
+                            <DataGridTextColumn Header="Y" Binding="{Binding y}" Width="30" FontSize="8"/>
+                            <DataGridTextColumn Header="Z" Binding="{Binding z}" Width="30" FontSize="8"/>
+                            <DataGridTextColumn Header="Delta Z" Binding="{Binding deltaZ}" Width="50" FontSize="8"/>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Rectangle HorizontalAlignment="Left" Height="Auto" Stroke="Black" VerticalAlignment="Stretch" Width="8" Margin="97,63,0,19.667">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="Red" Offset="0.40" />
+                                <GradientStop Color="Black" Offset="0.50" />
+                                <GradientStop Color="LawnGreen" Offset="0.60" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid>
+                    <d3:Chart Name="plotter" Margin="211,50,201.333,38.333">
+                        <d3:Chart.Title>
+                            <TextBlock HorizontalAlignment="Center" FontSize="18" Margin="0,5,0,5">Line graph legend sample</TextBlock>
+                        </d3:Chart.Title>
+                        <!--<Grid Name="lines"/>-->
+                        <d3:LineGraph x:Name="linesGraph" >
+
+                        </d3:LineGraph>
+                    </d3:Chart>
+                    <Button Content="Play" HorizontalAlignment="Left" Margin="46,139,0,0" VerticalAlignment="Top" Width="75" Click="PlayBtnClick"/>
+
+                </Grid>
+                
+            </TabItem>
+           
+        </TabControl>
         
-        <Rectangle HorizontalAlignment="Left" Height="Auto" Stroke="Black" VerticalAlignment="Stretch" Width="8" Margin="97,63,0,19.667">
-            <Rectangle.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="Red" Offset="0.40" />
-                    <GradientStop Color="Black" Offset="0.50" />
-                    <GradientStop Color="LawnGreen" Offset="0.60" />
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
-
-
     </Grid>
 </Window>

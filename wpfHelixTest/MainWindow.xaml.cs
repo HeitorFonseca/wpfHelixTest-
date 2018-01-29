@@ -1,4 +1,5 @@
 ﻿using HelixToolkit.Wpf;
+using InteractiveDataDisplay.WPF;
 using Microsoft.Win32;
 using OpenTK;
 using RabbitMQ.Client.Events;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +25,8 @@ namespace wpfHelixTest
     public partial class MainWindow : Window
     {
         bool lockVar = false;
+        int counter = 100;
+        double[] x = new double[200];
 
         List<SensorsData> sensorsDataList = new List<SensorsData>();
 
@@ -37,15 +41,21 @@ namespace wpfHelixTest
 
             this.device3D = new ModelVisual3D();
 
-            ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");
+            for (int i = 0; i < x.Length; i++)
+                x[i] = 3.1415;
+
+            for (int i = 0; i < x.Length/2; i++)
+                x[i] = 3.1415 * i / (x.Length - 1);
+
+            //ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");
             //proc.HostName = "localhost";
             //proc.Username = "userTest";
             //proc.Password = "userTest";
             //proc.Port = 5672;
             //proc.QueueName = "hello";
 
-            proc.Connect();
-            proc.ReadEvnt(WhenMessageReceived);
+            //proc.Connect();
+            //proc.ReadEvnt(WhenMessageReceived);
         }
 
         /// <summary>
@@ -180,9 +190,27 @@ namespace wpfHelixTest
             Console.WriteLine(" [x] Received {0}", message);
         }
 
+
         static double interpolate(double x0, double y0, double x1, double y1, double x)
         {
             return y0 * (x - x1) / (x0 - x1) + y1 * (x - x0) / (x1 - x0);
+        }
+
+        private void PlayBtnClick(object sender, RoutedEventArgs e)
+        {
+
+            //x[counter++] = 3.1415*counter/(x.Length - 1);
+
+            //var lg = new LineGraph();
+            //linegraph.Children.Add(lg);
+            //lg.Stroke = new SolidColorBrush(Color.FromArgb(255, 0, (byte)(40), 0));
+            //lg.Description = String.Format("Data series {0}", 1);
+            //lg.StrokeThickness = 2;
+
+            linesGraph.Plot(x, x.Select(v => Math.Sin(v + 1 / 10.0)).ToArray());
+
+            
+            //Thread.Sleep(500);            
         }
     }
 }
