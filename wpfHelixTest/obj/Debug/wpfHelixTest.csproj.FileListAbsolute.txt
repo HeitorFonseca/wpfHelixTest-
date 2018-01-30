@@ -61,3 +61,5 @@ C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.R
 C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Linq.xml
 C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.PlatformServices.xml
 C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\System.Reactive.Windows.Threading.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\Newtonsoft.Json.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\Newtonsoft.Json.xml

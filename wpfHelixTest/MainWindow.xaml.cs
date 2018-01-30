@@ -1,6 +1,7 @@
 ﻿using HelixToolkit.Wpf;
 using InteractiveDataDisplay.WPF;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using OpenTK;
 using RabbitMQ.Client.Events;
 using System;
@@ -24,9 +25,11 @@ namespace wpfHelixTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        bool lockVar = false;
-        int counter = 100;
-        double[] x = new double[200];
+        private List<Color> colors = new List<Color> {  Color.FromRgb( 140, 140, 140), Color.FromRgb(255, 0, 0), Color.FromRgb(255, 255, 0), Color.FromRgb(255, 0, 255), Color.FromRgb(0, 0, 255),
+                                                        Color.FromRgb(0, 255, 255), Color.FromRgb(0, 255, 0),  Color.FromRgb( 0, 0, 0) };
+
+        private Dictionary<string, OpticalSensor> opticalSensorsDic = new Dictionary<string, OpticalSensor>();
+        private Dictionary<string, LineGraph> graphs = new Dictionary<string, LineGraph>();
 
         List<SensorsData> sensorsDataList = new List<SensorsData>();
 
@@ -41,21 +44,16 @@ namespace wpfHelixTest
 
             this.device3D = new ModelVisual3D();
 
-            for (int i = 0; i < x.Length; i++)
-                x[i] = 3.1415;
-
-            for (int i = 0; i < x.Length/2; i++)
-                x[i] = 3.1415 * i / (x.Length - 1);
-
-            //ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");
+            ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");
             //proc.HostName = "localhost";
             //proc.Username = "userTest";
             //proc.Password = "userTest";
             //proc.Port = 5672;
             //proc.QueueName = "hello";
 
-            //proc.Connect();
-            //proc.ReadEvnt(WhenMessageReceived);
+            proc.Connect();
+            proc.ReadEvnt(WhenMessageReceived);
+
         }
 
         /// <summary>
@@ -137,7 +135,7 @@ namespace wpfHelixTest
                 }       
             }
 
-           var result = interpolate(sensorsDataList[0].x, sensorsDataList[0].y, sensorsDataList[1].x,
+           var result = Interpolate(sensorsDataList[0].x, sensorsDataList[0].y, sensorsDataList[1].x,
                         sensorsDataList[1].y, (sensorsDataList[0].x + sensorsDataList[1].x) / 2);
         }
 
@@ -147,10 +145,10 @@ namespace wpfHelixTest
 
             Point mousePos = PointToScreen(Mouse.GetPosition(sender as Button));
 
-            var sphereSize = 5;
+            //var sphereSize = 5;
             /* keep these values low, the higher the values the more detailed the sphere which may impact your rendering perfomance.*/
-            var phi = 12;
-            var theta = 12;
+            //var phi = 12;
+            //var theta = 12;
 
 
             foreach (SensorsData sensor in sensorsDataList)
@@ -183,15 +181,57 @@ namespace wpfHelixTest
             this.viewPort3d.Children.Add(device3D);
         }
 
-        static void WhenMessageReceived(object sender, BasicDeliverEventArgs ea)
+        public void WhenMessageReceived(object sender, BasicDeliverEventArgs ea)
         {
             var body = ea.Body;
             var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine(" [x] Received {0}", message);
+
+            JsonData dyn = JsonConvert.DeserializeObject<JsonData>(message);
+
+            this.Dispatcher.Invoke((Action)(() =>
+            {
+                UpdateGraph(dyn);
+            }));
+     
         }
 
+        public void UpdateGraph(JsonData data)
+        {
+            OpticalSensor optSensor;
 
-        static double interpolate(double x0, double y0, double x1, double y1, double x)
+            if (opticalSensorsDic.ContainsKey(data.sensorid))
+            {
+                optSensor = opticalSensorsDic[data.sensorid];
+            }
+            else
+            {
+                optSensor = new OpticalSensor();
+                
+                opticalSensorsDic[data.sensorid] = optSensor;
+
+                optSensor.lineGraph.Stroke = new SolidColorBrush(colors.First());
+                optSensor.lineGraph.Description = String.Format("Sensor {0}", data.sensorid);
+                optSensor.lineGraph.PlotHeight = 100;
+                //optSensor.lineGraph.FlowDirection = FlowDirection.LeftToRight;
+                    //PlotBase.FlowDirectionProperty;
+                linesGraph.Children.Add(optSensor.lineGraph);
+
+                colors.Remove(colors.First());
+            }
+
+            //if (optSensor.X.Count > 10)
+            //{
+            //    optSensor.X.Remove(optSensor.X.First());
+            //    optSensor.Y.Remove(optSensor.Y.First());
+            //}
+            optSensor.X.Add(data.value[0]);
+            optSensor.Y.Add(data.value[1]);
+
+            optSensor.lineGraph.Plot(optSensor.X, optSensor.Y);
+
+        }
+
+        static double Interpolate(double x0, double y0, double x1, double y1, double x)
         {
             return y0 * (x - x1) / (x0 - x1) + y1 * (x - x0) / (x1 - x0);
         }
@@ -199,7 +239,7 @@ namespace wpfHelixTest
         private void PlayBtnClick(object sender, RoutedEventArgs e)
         {
 
-            //x[counter++] = 3.1415*counter/(x.Length - 1);
+            //x[counter++] = counter;
 
             //var lg = new LineGraph();
             //linegraph.Children.Add(lg);
@@ -207,8 +247,8 @@ namespace wpfHelixTest
             //lg.Description = String.Format("Data series {0}", 1);
             //lg.StrokeThickness = 2;
 
-            linesGraph.Plot(x, x.Select(v => Math.Sin(v + 1 / 10.0)).ToArray());
-
+            //linesGraph.Plot(x, x.Select(v => Math.Sin(v + 1 / 10.0)).ToArray());
+            //lg1.Plot(x, y);
             
             //Thread.Sleep(500);            
         }

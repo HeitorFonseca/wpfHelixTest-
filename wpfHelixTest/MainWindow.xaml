@@ -81,10 +81,10 @@
                         <d3:Chart.Title>
                             <TextBlock HorizontalAlignment="Center" FontSize="18" Margin="0,5,0,5">Line graph legend sample</TextBlock>
                         </d3:Chart.Title>
-                        <!--<Grid Name="lines"/>-->
-                        <d3:LineGraph x:Name="linesGraph" >
+                        <Grid Name="linesGraph"/>
+                        <!--<d3:LineGraph x:Name="linesGraph" >
 
-                        </d3:LineGraph>
+                        </d3:LineGraph> -->
                     </d3:Chart>
                     <Button Content="Play" HorizontalAlignment="Left" Margin="46,139,0,0" VerticalAlignment="Top" Width="75" Click="PlayBtnClick"/>
 
