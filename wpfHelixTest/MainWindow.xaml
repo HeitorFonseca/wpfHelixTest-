@@ -77,7 +77,7 @@
             </TabItem>
             <TabItem Header="TabItem">
                 <Grid>
-                    <d3:Chart Name="plotter" Margin="211,50,201.333,38.333">
+                    <d3:Chart Name="plotter" Margin="211,50,201.333,38.333" HorizontalContentAlignment="Right">
                         <d3:Chart.Title>
                             <TextBlock HorizontalAlignment="Center" FontSize="18" Margin="0,5,0,5">Line graph legend sample</TextBlock>
                         </d3:Chart.Title>

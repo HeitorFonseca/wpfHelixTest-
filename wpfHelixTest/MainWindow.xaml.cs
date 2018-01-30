@@ -189,7 +189,7 @@ namespace wpfHelixTest
             JsonData dyn = JsonConvert.DeserializeObject<JsonData>(message);
 
             this.Dispatcher.Invoke((Action)(() =>
-            {
+            {       
                 UpdateGraph(dyn);
             }));
      
@@ -211,7 +211,7 @@ namespace wpfHelixTest
 
                 optSensor.lineGraph.Stroke = new SolidColorBrush(colors.First());
                 optSensor.lineGraph.Description = String.Format("Sensor {0}", data.sensorid);
-                optSensor.lineGraph.PlotHeight = 100;
+                
                 //optSensor.lineGraph.FlowDirection = FlowDirection.LeftToRight;
                     //PlotBase.FlowDirectionProperty;
                 linesGraph.Children.Add(optSensor.lineGraph);
@@ -224,6 +224,13 @@ namespace wpfHelixTest
             //    optSensor.X.Remove(optSensor.X.First());
             //    optSensor.Y.Remove(optSensor.Y.First());
             //}
+
+            if (optSensor.X.Count > 10)
+            {
+                plotter.PlotOriginX = optSensor.X[optSensor.X.Count - 10];
+                plotter.IsAutoFitEnabled = true;
+            }
+
             optSensor.X.Add(data.value[0]);
             optSensor.Y.Add(data.value[1]);
 
