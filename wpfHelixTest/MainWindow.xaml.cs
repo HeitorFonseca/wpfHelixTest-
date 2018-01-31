@@ -26,8 +26,9 @@ namespace wpfHelixTest
     public partial class MainWindow : Window
     {
         private int WINDOW_X_SIZE = 10;
-        private List<Color> colors = new List<Color> {  Color.FromRgb( 140, 140, 140), Color.FromRgb(255, 0, 0), Color.FromRgb(255, 255, 0), Color.FromRgb(255, 0, 255), Color.FromRgb(0, 0, 255),
-                                                        Color.FromRgb(0, 255, 255), Color.FromRgb(0, 255, 0),  Color.FromRgb( 0, 0, 0) };
+        private List<Color> colors = new List<Color> {  Color.FromRgb( 140, 140, 140), Color.FromRgb(255, 0, 0), Color.FromRgb(0, 255, 255),
+                                                        Color.FromRgb(255, 255, 0), Color.FromRgb(255, 0, 255), Color.FromRgb(0, 0, 255),
+                                                        Color.FromRgb(0, 255, 0),  Color.FromRgb( 0, 0, 0) };
 
         private Dictionary<string, OpticalSensor> opticalSensorsDic = new Dictionary<string, OpticalSensor>();
         private Dictionary<string, LineGraph> graphs = new Dictionary<string, LineGraph>();
@@ -220,38 +221,22 @@ namespace wpfHelixTest
                 colors.Remove(colors.First());
             }
 
-            //if (optSensor.X.Count > 10)
-            //{
-            //    optSensor.X.Remove(optSensor.X.First());
-            //    optSensor.Y.Remove(optSensor.Y.First());
-            //}
-
             optSensor.X.Add(data.value[0]);
             optSensor.Y.Add(data.value[1]);
 
-            if (optSensor.X.Count > WINDOW_X_SIZE)
-            {
-                double[] minMax = MinValue(optSensor.X.Count - WINDOW_X_SIZE);
-                plotter.PlotHeight = (minMax[1] - minMax[0]) + 5;
-                plotter.PlotOriginY = minMax[0] - 5;
-                plotter.PlotOriginX = optSensor.X[optSensor.X.Count - WINDOW_X_SIZE];
+            int currentW = (optSensor.X.Count >= WINDOW_X_SIZE ? optSensor.X.Count - WINDOW_X_SIZE : 0);
 
-                //plotter.IsAutoFitEnabled = true;
-            }
-            else
-            {
-                double[] minMax = MinValue(0);
+            double[] minMax = MinMaxValue(currentW);
 
-                plotter.PlotHeight = (minMax[1] - minMax[0]) + 5;
-                plotter.PlotOriginY = minMax[0] - 5;
-                plotter.PlotOriginX = optSensor.X.First();
-            }
+            plotter.PlotHeight = (minMax[1] - minMax[0]) + 4;
+            plotter.PlotOriginY = minMax[0] - 2;
+            plotter.PlotOriginX = optSensor.X[currentW];
 
             optSensor.lineGraph.Plot(optSensor.X, optSensor.Y);
 
         }         
 
-        public double[] MinValue(int c)
+        public double[] MinMaxValue(int c)
         {
     
             double[] ret = new double[2];

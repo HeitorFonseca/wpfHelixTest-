@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Debug\
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\obj\Release\
 wpfHelixTest
 none
 false
-DEBUG;TRACE
+TRACE
 C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\App.xaml
 11151548125
-1-366533832
-121097876649
+
+8-648627578
 82-1656918597
 MainWindow.xaml;
 
