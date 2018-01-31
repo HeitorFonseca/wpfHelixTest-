@@ -25,6 +25,7 @@ namespace wpfHelixTest
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int WINDOW_X_SIZE = 10;
         private List<Color> colors = new List<Color> {  Color.FromRgb( 140, 140, 140), Color.FromRgb(255, 0, 0), Color.FromRgb(255, 255, 0), Color.FromRgb(255, 0, 255), Color.FromRgb(0, 0, 255),
                                                         Color.FromRgb(0, 255, 255), Color.FromRgb(0, 255, 0),  Color.FromRgb( 0, 0, 0) };
 
@@ -225,17 +226,55 @@ namespace wpfHelixTest
             //    optSensor.Y.Remove(optSensor.Y.First());
             //}
 
-            if (optSensor.X.Count > 10)
-            {
-                plotter.PlotOriginX = optSensor.X[optSensor.X.Count - 10];
-                plotter.IsAutoFitEnabled = true;
-            }
-
             optSensor.X.Add(data.value[0]);
             optSensor.Y.Add(data.value[1]);
 
+            if (optSensor.X.Count > WINDOW_X_SIZE)
+            {
+                double[] minMax = MinValue(optSensor.X.Count - WINDOW_X_SIZE);
+                plotter.PlotHeight = (minMax[1] - minMax[0]) + 5;
+                plotter.PlotOriginY = minMax[0] - 5;
+                plotter.PlotOriginX = optSensor.X[optSensor.X.Count - WINDOW_X_SIZE];
+
+                //plotter.IsAutoFitEnabled = true;
+            }
+            else
+            {
+                double[] minMax = MinValue(0);
+
+                plotter.PlotHeight = (minMax[1] - minMax[0]) + 5;
+                plotter.PlotOriginY = minMax[0] - 5;
+                plotter.PlotOriginX = optSensor.X.First();
+            }
+
             optSensor.lineGraph.Plot(optSensor.X, optSensor.Y);
 
+        }         
+
+        public double[] MinValue(int c)
+        {
+    
+            double[] ret = new double[2];
+            ret[0] = 1000;
+            ret[1] =  -1000;
+
+            foreach (OpticalSensor s in opticalSensorsDic.Values)
+            {
+                for (int i = c; i < s.Y.Count; i++)
+                {
+                    if (s.Y[i] < ret[0])
+                    {
+                        ret[0] = s.Y[i];
+                    }
+
+                    if (s.Y[i] > ret[1])
+                    {
+                        ret[1] = s.Y[i];
+                    }
+                }
+            }
+
+            return ret;
         }
 
         static double Interpolate(double x0, double y0, double x1, double y1, double x)

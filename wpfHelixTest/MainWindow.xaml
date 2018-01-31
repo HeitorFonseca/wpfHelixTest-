@@ -32,12 +32,16 @@
         <TabControl HorizontalAlignment="Left" Margin="0,2,0,-0.333" Width="793" Grid.Row="2" ContextMenuClosing="PlayBtnClick">
             <TabItem Header="TabItem">
                 <Grid Margin="0,0,-0.667,0.333">
-                    <helix:HelixViewport3D x:Name="viewPort3d"  Margin="114,62,220,15" MinWidth="150" MaxWidth="800" MinHeight="212" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="45*"/>
+                        <ColumnDefinition Width="349*"/>
+                    </Grid.ColumnDefinitions>
+                    <helix:HelixViewport3D x:Name="viewPort3d"  Margin="24.333,62,220.001,15" MinWidth="150" MaxWidth="800" MinHeight="212" Grid.Column="1" >
                         <!-- Remember to add light to the scene -->
                         <helix:DefaultLights/>
 
                     </helix:HelixViewport3D>
-                    <Grid Height="324" VerticalAlignment="Top" Margin="0,0,0,-3" HorizontalAlignment="Left" Width="789">
+                    <Grid Height="324" VerticalAlignment="Top" Margin="0,0,-0.999,-3" HorizontalAlignment="Left" Width="789" Grid.ColumnSpan="2">
                         <Button x:Name="loadStl_btn" Content="Load Stl Model"  HorizontalAlignment="Left" Margin="8,0,0,198" VerticalAlignment="bottom" Width="80" Click="LoadStlBntClick" FontSize="9"/>
                         <Button x:Name="loadSensors_btn" Content="Load sensors" HorizontalAlignment="Left" Margin="8,0,0,177" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" Click="LoadSensorsBtnClick" FontSize="9"/>
                         <Button x:Name="start_btn" Content="Start" HorizontalAlignment="Left" Margin="8,0,0,156" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9" Click="StartBtnClick"/>
@@ -45,7 +49,7 @@
                         <Button x:Name="exportCsv_btn" Content="Export csv" HorizontalAlignment="Left" Margin="8,0,0,114" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
                         <Button x:Name="exportTxt_btn" Content="Export txt" HorizontalAlignment="Left" Margin="8,0,0,93" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
                     </Grid>
-                    <DataGrid x:Name="SensorsInfoDataGrid" Margin="0,62,10.333,20.667" HorizontalAlignment="Right" VerticalAlignment="Stretch" Height="Auto" Width="Auto" RenderTransformOrigin="0.5,0.5" MaxWidth="400" FontSize="9">
+                    <DataGrid x:Name="SensorsInfoDataGrid" Margin="0,62,10.001,20" HorizontalAlignment="Right" VerticalAlignment="Stretch" Height="Auto" Width="Auto" RenderTransformOrigin="0.5,0.5" MaxWidth="400" FontSize="9" Grid.Column="1">
 
                         <DataGrid.Resources>
                             <Style TargetType="{x:Type DataGridColumnHeader}" >
@@ -64,7 +68,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Rectangle HorizontalAlignment="Left" Height="Auto" Stroke="Black" VerticalAlignment="Stretch" Width="8" Margin="97,63,0,19.667">
+                    <Rectangle HorizontalAlignment="Left" Height="Auto" Stroke="Black" VerticalAlignment="Stretch" Width="8" Margin="7.333,63,0,19" Grid.Column="1">
                         <Rectangle.Fill>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                 <GradientStop Color="Red" Offset="0.40" />
@@ -77,7 +81,7 @@
             </TabItem>
             <TabItem Header="TabItem">
                 <Grid>
-                    <d3:Chart Name="plotter" Margin="211,50,201.333,38.333" HorizontalContentAlignment="Right">
+                    <d3:Chart Name="plotter" Margin="211,50,201.333,38.333" HorizontalContentAlignment="Right" IsAutoFitEnabled="True" PlotWidth="10">
                         <d3:Chart.Title>
                             <TextBlock HorizontalAlignment="Center" FontSize="18" Margin="0,5,0,5">Line graph legend sample</TextBlock>
                         </d3:Chart.Title>
@@ -89,10 +93,10 @@
                     <Button Content="Play" HorizontalAlignment="Left" Margin="46,139,0,0" VerticalAlignment="Top" Width="75" Click="PlayBtnClick"/>
 
                 </Grid>
-                
+
             </TabItem>
-           
+
         </TabControl>
-        
+
     </Grid>
 </Window>
