@@ -25,7 +25,9 @@
                     <MenuItem Header="Exit"/>
                 </MenuItem>
                 <MenuItem Header="Edit" Name="MenuEdit"/>
-                <MenuItem Header="View" Name="MenuView"/>
+                <MenuItem Header="Connection" Name="MenuView">
+                    <MenuItem Header="Configuration" Click="PlayBtnClick"/>
+                </MenuItem>
             </Menu>
         </DockPanel>
 
@@ -88,10 +90,10 @@
                         <Grid Name="linesGraph"/>
                     </d3:Chart>
                     <Button Content="Play" HorizontalAlignment="Left" Margin="46,139,0,0" VerticalAlignment="Top" Width="75" Click="PlayBtnClick"/>
-                    <Button Margin="25,188,656.333,91.333" Background="Transparent" BorderBrush="Transparent">
+                    <Button Margin="46,188,645.333,99.333" Background="Transparent" BorderBrush="Transparent">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                             <Image Source="wpfHelixTest/images/saveBtn.png" Height="30" Width="30"/>
-                            <TextBlock Height="23"><Run Text="Save Data"/></TextBlock>
+                            <TextBlock Height="17"><Run Text="Save Data"/></TextBlock>
                         </StackPanel>
                     </Button>
 

@@ -270,6 +270,10 @@ namespace wpfHelixTest
         private void PlayBtnClick(object sender, RoutedEventArgs e)
         {
 
+            ConnectionDialog conDiag = new ConnectionDialog();
+
+            conDiag.Show();
+
             //x[counter++] = counter;
 
             //var lg = new LineGraph();
@@ -280,7 +284,7 @@ namespace wpfHelixTest
 
             //linesGraph.Plot(x, x.Select(v => Math.Sin(v + 1 / 10.0)).ToArray());
             //lg1.Plot(x, y);
-            
+
             //Thread.Sleep(500);            
         }
     }

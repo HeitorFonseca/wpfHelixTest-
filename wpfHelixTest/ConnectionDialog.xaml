@@ -1,0 +1,22 @@
+﻿<Window x:Class="wpfHelixTest.ConnectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wpfHelixTest"
+        mc:Ignorable="d"
+        Title="ConnectionDialog" Height="190" Width="300">
+
+    <Grid Height="160" Width="290">
+        <Label Content="Hostname" HorizontalAlignment="Left" Height="30" Margin="20,15,0,0" VerticalAlignment="Top"/>
+        <Label Content="Port" HorizontalAlignment="Left" Height="30" Margin="20,40,0,0" VerticalAlignment="Top"/>
+        <Label Content="Username" HorizontalAlignment="Left" Height="30" Margin="20,66,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Height="30" Margin="20,92,0,0" VerticalAlignment="Top"/>
+
+        <TextBox x:Name="HostnameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="20" Width="123" Margin="109,21,0,0"  />
+        <TextBox x:Name="UsernameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="20" Width="123" Margin="109,71,0,0" />
+        <TextBox x:Name="PortBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="" VerticalAlignment="Top"  Height="20" Width="123" Margin="109,46,0,0" />
+        <PasswordBox x:Name="PasswordBox" Height="20" Width="123" Margin="109,96,58,44"/>
+
+    </Grid>
+</Window>
