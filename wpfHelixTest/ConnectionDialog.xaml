@@ -15,7 +15,7 @@
 
         <TextBox x:Name="HostnameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{Binding Path=HostName}" VerticalAlignment="Top" Height="20" Width="123" Margin="109,21,0,0"  />
         <TextBox x:Name="PortBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{Binding Path=Port}" VerticalAlignment="Top"  Height="20" Width="123" Margin="109,46,0,0" />
-        <TextBox x:Name="UsernameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="20" Width="123" Margin="109,71,0,0" />
+        <TextBox x:Name="UsernameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{Binding Path=Username}" VerticalAlignment="Top" Height="20" Width="123" Margin="109,71,0,0" />
         <PasswordBox x:Name="PasswordBox" Height="20" Width="123" Margin="109,96,58,44"/>
 
         <Button x:Name="OkConnectionBtn" Content="Ok" HorizontalAlignment="Left" Margin="109,128,0,0" VerticalAlignment="Top" Width="58" RenderTransformOrigin="0.606,0.525" IsDefault="True" Click="ConnectionOkBtnClick"   />

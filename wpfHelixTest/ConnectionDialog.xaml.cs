@@ -28,6 +28,7 @@ namespace wpfHelixTest
             InitializeComponent();           
 
             this.DataContext = d;
+            this.PasswordBox.Password = d.Password;
 
         }
 

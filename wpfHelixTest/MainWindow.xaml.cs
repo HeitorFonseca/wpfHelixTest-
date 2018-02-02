@@ -296,5 +296,10 @@ namespace wpfHelixTest
 
                 //Thread.Sleep(500);            
             }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            proc.Disconnect();
+        }
     }
 }

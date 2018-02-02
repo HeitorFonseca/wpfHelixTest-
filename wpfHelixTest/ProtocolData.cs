@@ -21,6 +21,7 @@ namespace wpfHelixTest
         public string QueueName { get; set; }
 
         private IModel _channel;
+        private IConnection _connect;
 
         public ProtocolData(string HostName, int Port, string Username, string Password, string QueueName)
         {
@@ -40,12 +41,15 @@ namespace wpfHelixTest
                 //Password = this.Password,
                 //Port = this.Port,
                 //Protocol = Protocols.DefaultProtocol
+                
             };
 
 
-            IConnection _connect = connectionFactory.CreateConnection();
+            _connect = connectionFactory.CreateConnection();
 
             _channel = _connect.CreateModel();
+            // Close connection automatically once the last open channel on the connection closes
+            _connect.AutoClose = true;
 
             return _channel;
         }
@@ -60,6 +64,12 @@ namespace wpfHelixTest
             consumer.Received += MessageReceivedCallback;
 
             _channel.BasicConsume(queue: this.QueueName, autoAck: true, consumer: consumer);           
+        }
+
+        public void Disconnect()
+        {
+            _channel.Close();
+            _connect.Close();
         }
     }
 }
