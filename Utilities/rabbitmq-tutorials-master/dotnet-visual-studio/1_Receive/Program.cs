@@ -10,9 +10,9 @@ class Program
         //var factory = new ConnectionFactory() { HostName = "169.254.88.66" };
         var factory = new ConnectionFactory() { HostName = "localhost" };
         factory.Port = 5672;
-        factory.UserName = "userTest";
-        factory.Password = "userTest";
-        factory.Protocol = Protocols.DefaultProtocol;
+        //factory.UserName = "userTest";
+        //factory.Password = "userTest";
+        //factory.Protocol = Protocols.DefaultProtocol;
 
         using(var connection = factory.CreateConnection())
         using(var channel = connection.CreateModel())

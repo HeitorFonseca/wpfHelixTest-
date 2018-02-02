@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Runtime.CompilerServices;
 
 namespace wpfHelixTest
 {
@@ -19,9 +20,26 @@ namespace wpfHelixTest
     /// </summary>
     public partial class ConnectionDialog : Window
     {
-        public ConnectionDialog()
+        public string Hostname { get; set; }
+        public int Port { get; set; }
+
+        public ConnectionDialog(ProtocolData d)
         {
-            InitializeComponent();
+            InitializeComponent();           
+
+            this.DataContext = d;
+
         }
+
+        private void ConnectionOkBtnClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+        }
+
+        private void CancelConnectionBtnClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
+
     }
 }

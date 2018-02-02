@@ -31,11 +31,15 @@ namespace wpfHelixTest
                                                         Color.FromRgb(0, 255, 0),  Color.FromRgb( 0, 0, 0) };
 
         private Dictionary<string, OpticalSensor> opticalSensorsDic = new Dictionary<string, OpticalSensor>();
-        private Dictionary<string, LineGraph> graphs = new Dictionary<string, LineGraph>();
+
+        private string HostName { get; set; }
+        private int Port { get; set; }
+        private string Username { get; set; }
+        private string Password { get; set; }
+
+        ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");
 
         List<SensorsData> sensorsDataList = new List<SensorsData>();
-
-        private const string MODEL_PATH = @"C:\Users\heitor.araujo\Documents\wokspace\GM\TestRhinoGrasshopper\objRhinofile2.obj";
 
         ModelVisual3D device3D;
         Model3DGroup groupModel = new Model3DGroup();        
@@ -46,7 +50,6 @@ namespace wpfHelixTest
 
             this.device3D = new ModelVisual3D();
 
-            ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");
             //proc.HostName = "localhost";
             //proc.Username = "userTest";
             //proc.Password = "userTest";
@@ -94,7 +97,6 @@ namespace wpfHelixTest
             if (dlg.ShowDialog() == true)
             {
                 this.viewPort3d.Children.Remove(device3D);
-
 
                 string filePath = dlg.FileName;
 
@@ -214,8 +216,6 @@ namespace wpfHelixTest
                 optSensor.lineGraph.Stroke = new SolidColorBrush(colors.First());
                 optSensor.lineGraph.Description = String.Format("Sensor {0}", data.sensorid);
                 
-                //optSensor.lineGraph.FlowDirection = FlowDirection.LeftToRight;
-                    //PlotBase.FlowDirectionProperty;
                 linesGraph.Children.Add(optSensor.lineGraph);
 
                 colors.Remove(colors.First());
@@ -270,22 +270,31 @@ namespace wpfHelixTest
         private void PlayBtnClick(object sender, RoutedEventArgs e)
         {
 
-            ConnectionDialog conDiag = new ConnectionDialog();
+            ConnectionDialog connectionDiag = new ConnectionDialog(proc);
 
-            conDiag.Show();
+            connectionDiag.ShowDialog();
 
-            //x[counter++] = counter;
+            // User clicked OK
+            if (connectionDiag.DialogResult.HasValue && connectionDiag.DialogResult.Value)
+            {
+                this.HostName = connectionDiag.HostnameBox.Text;
+                this.Port = Convert.ToInt32(connectionDiag.PortBox.Text);
+                this.Username = connectionDiag.UsernameBox.Text;
+                this.Password = connectionDiag.PasswordBox.Password;
+            }
 
-            //var lg = new LineGraph();
-            //linegraph.Children.Add(lg);
-            //lg.Stroke = new SolidColorBrush(Color.FromArgb(255, 0, (byte)(40), 0));
-            //lg.Description = String.Format("Data series {0}", 1);
-            //lg.StrokeThickness = 2;
+                //x[counter++] = counter;
 
-            //linesGraph.Plot(x, x.Select(v => Math.Sin(v + 1 / 10.0)).ToArray());
-            //lg1.Plot(x, y);
+                //var lg = new LineGraph();
+                //linegraph.Children.Add(lg);
+                //lg.Stroke = new SolidColorBrush(Color.FromArgb(255, 0, (byte)(40), 0));
+                //lg.Description = String.Format("Data series {0}", 1);
+                //lg.StrokeThickness = 2;
 
-            //Thread.Sleep(500);            
-        }
+                //linesGraph.Plot(x, x.Select(v => Math.Sin(v + 1 / 10.0)).ToArray());
+                //lg1.Plot(x, y);
+
+                //Thread.Sleep(500);            
+            }
     }
 }

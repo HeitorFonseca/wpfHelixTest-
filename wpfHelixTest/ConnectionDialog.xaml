@@ -13,10 +13,13 @@
         <Label Content="Username" HorizontalAlignment="Left" Height="30" Margin="20,66,0,0" VerticalAlignment="Top"/>
         <Label Content="Password" HorizontalAlignment="Left" Height="30" Margin="20,92,0,0" VerticalAlignment="Top"/>
 
-        <TextBox x:Name="HostnameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="20" Width="123" Margin="109,21,0,0"  />
+        <TextBox x:Name="HostnameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{Binding Path=HostName}" VerticalAlignment="Top" Height="20" Width="123" Margin="109,21,0,0"  />
+        <TextBox x:Name="PortBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="{Binding Path=Port}" VerticalAlignment="Top"  Height="20" Width="123" Margin="109,46,0,0" />
         <TextBox x:Name="UsernameBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="20" Width="123" Margin="109,71,0,0" />
-        <TextBox x:Name="PortBox" HorizontalAlignment="Left"  TextWrapping="Wrap" Text="" VerticalAlignment="Top"  Height="20" Width="123" Margin="109,46,0,0" />
         <PasswordBox x:Name="PasswordBox" Height="20" Width="123" Margin="109,96,58,44"/>
+
+        <Button x:Name="OkConnectionBtn" Content="Ok" HorizontalAlignment="Left" Margin="109,128,0,0" VerticalAlignment="Top" Width="58" RenderTransformOrigin="0.606,0.525" IsDefault="True" Click="ConnectionOkBtnClick"   />
+        <Button x:Name="CancelConnectionBtn" Content="Cancel" HorizontalAlignment="Left" Margin="174,128,0,0" VerticalAlignment="Top" Width="58"  IsCancel="True" Click="CancelConnectionBtnClick"/>
 
     </Grid>
 </Window>

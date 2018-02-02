@@ -36,10 +36,10 @@ namespace wpfHelixTest
             var connectionFactory = new ConnectionFactory()
             {
                 HostName = this.HostName,
-                UserName = this.Username,
-                Password = this.Password,
-                Port = this.Port,
-                Protocol = Protocols.DefaultProtocol
+                //UserName = this.Username,
+                //Password = this.Password,
+                //Port = this.Port,
+                //Protocol = Protocols.DefaultProtocol
             };
 
 
