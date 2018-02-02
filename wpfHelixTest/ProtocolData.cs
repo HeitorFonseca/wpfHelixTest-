@@ -69,7 +69,12 @@ namespace wpfHelixTest
         public void Disconnect()
         {
             _channel.Close();
-            _connect.Close();
+
+            try
+            {
+                _connect.Close();
+            }
+            catch{ }
         }
     }
 }

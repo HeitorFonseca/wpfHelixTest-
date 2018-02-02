@@ -1,5 +1,8 @@
 ﻿using HelixToolkit.Wpf;
 using InteractiveDataDisplay.WPF;
+using LiveCharts;
+using LiveCharts.Configurations;
+using LiveCharts.Wpf;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using OpenTK;
@@ -37,12 +40,18 @@ namespace wpfHelixTest
         private string Username { get; set; }
         private string Password { get; set; }
 
-        ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");
 
+        ProtocolData proc = new ProtocolData("localhost", 5672, "userTest", "userTest", "hello");        
         List<SensorsData> sensorsDataList = new List<SensorsData>();
 
+        public Func<double, string> Formatter { get; set; }
+
+        public SeriesCollection SeriesCollection { get; set; }
+        public List<string> Labels = new List<string>();
+
         ModelVisual3D device3D;
-        Model3DGroup groupModel = new Model3DGroup();        
+        Model3DGroup groupModel = new Model3DGroup();
+
 
         public MainWindow()
         {
@@ -59,6 +68,16 @@ namespace wpfHelixTest
             proc.Connect();
             proc.ReadEvnt(WhenMessageReceived);
 
+            var dayConfig = Mappers.Xy<DateModel>()
+                .X(dayModel => (double)dayModel.DateTime.Ticks / TimeSpan.FromHours(1).Ticks)
+                .Y(dayModel => dayModel.Value);
+
+            SeriesCollection = new SeriesCollection(dayConfig);
+
+            Formatter = value => new System.DateTime((long)(value * TimeSpan.FromHours(1).Ticks)).ToString("t");
+
+            DataContext = this;
+        
         }
 
         /// <summary>
@@ -199,41 +218,63 @@ namespace wpfHelixTest
      
         }
 
-        public void UpdateGraph(JsonData data)
+        public void UpdateGraph(JsonData jsonData)
         {
-            OpticalSensor optSensor;
-
-            if (opticalSensorsDic.ContainsKey(data.sensorid))
+            
+            foreach (List<string> data in jsonData.values)
             {
-                optSensor = opticalSensorsDic[data.sensorid];
+                OpticalSensor optSensor;
+
+                string sensorId = data[0];
+                long timestamp = Convert.ToInt64(data[1]);
+                DateTimeOffset dateTimeOffset = DateTimeOffset.Now; //DateTimeOffset.FromUnixTimeSeconds(timestamp);
+               
+                double value = Convert.ToDouble(data[2]);
+                string parameter = data[3];
+                string status = data[3];
+
+                if (opticalSensorsDic.ContainsKey(sensorId))
+                {
+                    optSensor = opticalSensorsDic[sensorId];
+                }
+                else
+                {
+                    optSensor = new OpticalSensor();
+
+                    opticalSensorsDic[sensorId] = optSensor;
+
+
+                    //optSensor.LnGraph.Stroke = new SolidColorBrush(colors.First());
+                    //optSensor.LnGraph.Description = String.Format("Sensor {0}", sensorId);
+
+                    optSensor.LnSerie.Title = sensorId;
+                    
+                    this.SeriesCollection.Add(optSensor.LnSerie);
+
+                    colors.Remove(colors.First());
+                }
+
+                optSensor.Values.Add(value);
+                optSensor.Ts.Add(dateTimeOffset.Millisecond);
+               
+                int currentW = (optSensor.Values.Count >= WINDOW_X_SIZE ? optSensor.Values.Count - WINDOW_X_SIZE : 0);
+
+                double[] minMax = MinMaxValue(currentW);
+
+                //plotter.PlotHeight = (minMax[1] - minMax[0]) + 4;
+                //plotter.PlotOriginY = minMax[0] - 2;
+                //plotter.PlotOriginX = optSensor.Values[currentW];
+
+                //optSensor.LnGraph.Plot(optSensor.Values, optSensor.Tests);
+
+                DateModel d = new DateModel();
+
+                d.DateTime = dateTimeOffset.DateTime;
+                d.Value = value;
+
+                optSensor.LnSerie.Values.Add(d);               
+
             }
-            else
-            {
-                optSensor = new OpticalSensor();
-                
-                opticalSensorsDic[data.sensorid] = optSensor;
-
-                optSensor.lineGraph.Stroke = new SolidColorBrush(colors.First());
-                optSensor.lineGraph.Description = String.Format("Sensor {0}", data.sensorid);
-                
-                linesGraph.Children.Add(optSensor.lineGraph);
-
-                colors.Remove(colors.First());
-            }
-
-            optSensor.X.Add(data.value[0]);
-            optSensor.Y.Add(data.value[1]);
-
-            int currentW = (optSensor.X.Count >= WINDOW_X_SIZE ? optSensor.X.Count - WINDOW_X_SIZE : 0);
-
-            double[] minMax = MinMaxValue(currentW);
-
-            plotter.PlotHeight = (minMax[1] - minMax[0]) + 4;
-            plotter.PlotOriginY = minMax[0] - 2;
-            plotter.PlotOriginX = optSensor.X[currentW];
-
-            optSensor.lineGraph.Plot(optSensor.X, optSensor.Y);
-
         }         
 
         public double[] MinMaxValue(int c)
@@ -245,16 +286,16 @@ namespace wpfHelixTest
 
             foreach (OpticalSensor s in opticalSensorsDic.Values)
             {
-                for (int i = c; i < s.Y.Count; i++)
+                for (int i = c; i < s.Ts.Count; i++)
                 {
-                    if (s.Y[i] < ret[0])
+                    if (s.Ts[i] < ret[0])
                     {
-                        ret[0] = s.Y[i];
+                        ret[0] = s.Ts[i];
                     }
 
-                    if (s.Y[i] > ret[1])
+                    if (s.Ts[i] > ret[1])
                     {
-                        ret[1] = s.Y[i];
+                        ret[1] = s.Ts[i];
                     }
                 }
             }

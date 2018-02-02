@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:helix="http://helix-toolkit.org/wpf"
 
         xmlns:local="clr-namespace:wpfHelixTest"
@@ -30,7 +31,7 @@
                 </MenuItem>
             </Menu>
         </DockPanel>
-
+     
         <TabControl HorizontalAlignment="Left" Margin="0,2,0,-0.333" Width="793" Grid.Row="2" ContextMenuClosing="PlayBtnClick">
             <TabItem Header="TabItem">
                 <Grid Margin="0,0,-0.667,0.333">
@@ -83,22 +84,25 @@
             </TabItem>
             <TabItem Header="TabItem">
                 <Grid>
-                    <d3:Chart Name="plotter" Margin="211,50,201.333,38.333" HorizontalContentAlignment="Right" IsAutoFitEnabled="True" PlotWidth="10">
-                        <d3:Chart.Title>
-                            <TextBlock HorizontalAlignment="Center" FontSize="12" Margin="0,5,0,5">Velocity x Time</TextBlock>
-                        </d3:Chart.Title>
-                        <Grid Name="linesGraph"/>
-                    </d3:Chart>
-                    <Button Content="Play" HorizontalAlignment="Left" Margin="46,139,0,0" VerticalAlignment="Top" Width="75" Click="PlayBtnClick"/>
-                    <Button Margin="46,188,645.333,99.333" Background="Transparent" BorderBrush="Transparent">
+
+                    <Button Content="Play" HorizontalAlignment="Left" Margin="10,137,0,0" VerticalAlignment="Top" Width="75" Click="PlayBtnClick"/>
+                    <Button Margin="10,188,681.333,99.333" Background="Transparent" BorderBrush="Transparent">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <TextBlock Height="18"><Run Text="Save Data"/></TextBlock>
                             <Image Source="wpfHelixTest/images/saveBtn.png" Height="30" Width="30"/>
-                            <TextBlock Height="17"><Run Text="Save Data"/></TextBlock>
                         </StackPanel>
                     </Button>
 
                 </Grid>
 
+            </TabItem>
+            <TabItem Header="TabItem">
+
+                <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" Width="375" Height="300" Margin="215,22,197.333,-0.667">
+                    <lvc:CartesianChart.AxisX >
+                        <lvc:Axis Title="Sales" LabelFormatter="{Binding YFormatter}" ></lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
             </TabItem>
 
         </TabControl>

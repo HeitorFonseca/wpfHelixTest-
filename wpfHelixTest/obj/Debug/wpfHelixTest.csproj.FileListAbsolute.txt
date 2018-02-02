@@ -111,3 +111,9 @@ C:\Users\Heitor Araujo\Documents\workspace\senai\wpfHelixTest-\wpfHelixTest\obj\
 C:\Users\Heitor Araujo\Documents\workspace\senai\wpfHelixTest-\wpfHelixTest\obj\Debug\wpfHelixTest.csproj.CoreCompileInputs.cache
 C:\Users\Heitor Araujo\Documents\workspace\senai\wpfHelixTest-\wpfHelixTest\obj\Debug\wpfHelixTest.exe
 C:\Users\Heitor Araujo\Documents\workspace\senai\wpfHelixTest-\wpfHelixTest\obj\Debug\wpfHelixTest.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\LiveCharts.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\LiveCharts.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\LiveCharts.xml
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\heitor.araujo\source\repos\wpfHelixTest\wpfHelixTest\bin\Debug\LiveCharts.Wpf.xml
