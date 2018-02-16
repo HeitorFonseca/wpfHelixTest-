@@ -18,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 
 
@@ -52,10 +53,23 @@ namespace wpfHelixTest
         ModelVisual3D device3D;
         Model3DGroup groupModel = new Model3DGroup();
 
+        MeshGeometry3D modelMesh = new MeshGeometry3D();
+        MeshGeometry3D rectangleMesh = new MeshGeometry3D();
+
+        private const double xmin = -592.5;
+        private const double xmax = 592.5;
+
+        private const double ymin = -210;
+        private const double ymax = 210;
+
+        private const double texture_xscale = (xmax - xmin);
+        private const double texture_yscale = (ymax - ymin);
 
         public MainWindow()
         {
             InitializeComponent();
+
+            DefineLights();
 
             this.device3D = new ModelVisual3D();
 
@@ -80,6 +94,16 @@ namespace wpfHelixTest
         
         }
 
+        // Define the lights.
+        private void DefineLights()
+        {
+            AmbientLight ambient_light = new AmbientLight(Colors.Gray);
+            DirectionalLight directional_light =
+                new DirectionalLight(Colors.Gray, new Vector3D(-1.0, -3.0, -2.0));
+            groupModel.Children.Add(ambient_light);
+            groupModel.Children.Add(directional_light);
+        }
+
         /// <summary>
         /// Display 3D Model
         /// </summary>
@@ -96,15 +120,28 @@ namespace wpfHelixTest
                 //Import 3D model file
                 ModelImporter import = new ModelImporter();
 
+                Material material = new DiffuseMaterial(new SolidColorBrush(Colors.Black));
+                import.DefaultMaterial = material;
+
                 //Load the 3D model file
                 device = import.Load(model);
-            }
+
+                int countVertices = 0;
+
+                Action<GeometryModel3D, Transform3D> nameAction = ((geometryModel, transform) =>
+                {
+                    modelMesh = (MeshGeometry3D)geometryModel.Geometry;
+                    countVertices += modelMesh.Positions.Count;
+                });
+                
+                device.Traverse(nameAction);
+            }            
             catch (Exception e)
             {
                 // Handle exception in case can not find the 3D model file
                 MessageBox.Show("Exception Error : " + e.StackTrace);
             }
-            
+                        
             return device;
         }
 
@@ -122,8 +159,14 @@ namespace wpfHelixTest
                 groupModel.Children.Add(Display3d(filePath));
 
                 device3D.Content = groupModel;
+
                 // Add to view port
                 this.viewPort3d.Children.Add(device3D);
+                this.viewPort3d.ZoomExtents();
+
+                ModelLPoints lp = new ModelLPoints();
+
+                lp.BuildDic(modelMesh);
             }
         }
 
@@ -178,7 +221,7 @@ namespace wpfHelixTest
             {
                 MeshBuilder meshBuilder = new MeshBuilder();
 
-                meshBuilder.AddBox(new Point3D(sensor.x, sensor.y, sensor.deltaZ), 10, 10, 0.005);
+                meshBuilder.AddBox(new Point3D(sensor.x, sensor.y, sensor.deltaZ), 20, 20, 0.005);
                 //meshBuilder.AddCylinder(new Point3D(sensor.x+100, sensor.y+100, sensor.deltaZ), new Point3D(sensor.x+100, sensor.y+100, sensor.deltaZ + 10), 10, 12);
                 //meshBuilder.AddSphere(new Point3D(sensor.x, sensor.y, sensor.z), sphereSize, theta, phi);
                 GeometryModel3D sphereModel;
@@ -241,12 +284,7 @@ namespace wpfHelixTest
                 {
                     optSensor = new OpticalSensor();
 
-                    opticalSensorsDic[sensorId] = optSensor;
-
-
-                    //optSensor.LnGraph.Stroke = new SolidColorBrush(colors.First());
-                    //optSensor.LnGraph.Description = String.Format("Sensor {0}", sensorId);
-
+                    opticalSensorsDic[sensorId] = optSensor;                
                     optSensor.LnSerie.Title = sensorId;
                     
                     this.SeriesCollection.Add(optSensor.LnSerie);
@@ -261,16 +299,7 @@ namespace wpfHelixTest
 
                 double[] minMax = MinMaxValue(currentW);
 
-                //plotter.PlotHeight = (minMax[1] - minMax[0]) + 4;
-                //plotter.PlotOriginY = minMax[0] - 2;
-                //plotter.PlotOriginX = optSensor.Values[currentW];
-
-                //optSensor.LnGraph.Plot(optSensor.Values, optSensor.Tests);
-
-                DateModel d = new DateModel();
-
-                d.DateTime = dateTimeOffset.DateTime;
-                d.Value = value;
+                DateModel d = new DateModel { Value = value, DateTime = dateTimeOffset.DateTime } ;
 
                 optSensor.LnSerie.Values.Add(d);               
 
@@ -282,7 +311,7 @@ namespace wpfHelixTest
     
             double[] ret = new double[2];
             ret[0] = 1000;
-            ret[1] =  -1000;
+            ret[1] = -1000;
 
             foreach (OpticalSensor s in opticalSensorsDic.Values)
             {
@@ -322,25 +351,214 @@ namespace wpfHelixTest
                 this.Port = Convert.ToInt32(connectionDiag.PortBox.Text);
                 this.Username = connectionDiag.UsernameBox.Text;
                 this.Password = connectionDiag.PasswordBox.Password;
-            }
-
-                //x[counter++] = counter;
-
-                //var lg = new LineGraph();
-                //linegraph.Children.Add(lg);
-                //lg.Stroke = new SolidColorBrush(Color.FromArgb(255, 0, (byte)(40), 0));
-                //lg.Description = String.Format("Data series {0}", 1);
-                //lg.StrokeThickness = 2;
-
-                //linesGraph.Plot(x, x.Select(v => Math.Sin(v + 1 / 10.0)).ToArray());
-                //lg1.Plot(x, y);
-
-                //Thread.Sleep(500);            
-            }
+            }         
+        }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             proc.Disconnect();
+        }
+
+        private void ExportCsvBtnClick(object sender, RoutedEventArgs e)
+        {
+            List<double> X = new List<double>() { -572.000, -552.500, -100.000, 0.000, 100.000, 537.500, 572.500 };
+            List<double> Y = new List<double>() { -175.500, -175.000, -155.500, -155.000, 124.000, 124.500, 129.500 };
+
+
+            double[,] matrix = { { -0.153, -0.153, -0.153, -0.153, -0.153, -0.153, -0.153 },
+                                 { -0.091, -0.091, -0.091, -0.091, -0.091, -0.091, -0.091 },
+                                 { 0.010, 0.010, 0.010, 0.010, 0.010, 0.010, 0.010 },
+                                 { 0.009, 0.009, 0.009, 0.009, 0.009, 0.009, 0.009, },
+                                 { 0.012, 0.012, 0.012, 0.012, 0.012, 0.012, 0.012 },
+                                 { 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000 },
+                                 { -0.074 , -0.074 , -0.074 , -0.074 ,  -0.074 , -0.074 , -0.074 }
+                               };
+            
+            double valkue = interpolat.interp2(X, Y, matrix, 384.500, 100);
+
+            //interpolat inter = new interpolat();
+
+            //Vts.Common.Math.Interpolation.interp2()
+
+            //defineModel();
+
+            modelForIntersection();
+        }
+
+        private void defineModel()
+        {
+            // Make a mesh to hold the surface.
+            MeshGeometry3D mesh = new MeshGeometry3D();
+
+            List<double> Xs = new List<double>();
+            List<double> Ys = new List<double>();
+            List<double> Zs = new List<double>();
+
+            double dx = 15;
+            double dy = 15;
+
+            foreach (SensorsData data in sensorsDataList)
+            {
+                Xs.Add(data.x);
+                Xs.Add(data.x);
+                Xs.Add(data.x);
+
+                Point3D p00 = new Point3D(data.x, data.y, data.deltaZ);
+                Point3D p10 = new Point3D(data.x + dx, data.y, data.deltaZ);
+                Point3D p01 = new Point3D(data.x, data.z + dy, data.deltaZ);
+                Point3D p11 = new Point3D(data.x + dx, data.y + dy, data.deltaZ);
+
+                // Add the triangles.
+                AddTriangle(mesh, p00, p01, p11);
+                AddTriangle(mesh, p00, p11, p10);
+            }
+
+            Material material = new DiffuseMaterial(new SolidColorBrush(Colors.Red));
+
+
+            GeometryModel3D surface_model = new GeometryModel3D(mesh, material);
+
+            groupModel.Children.Add(surface_model);
+
+            device3D.Content = groupModel;
+
+            // Add to view port
+            this.viewPort3d.Children.Add(device3D);
+            this.viewPort3d.ZoomExtents();
+        }
+
+        // Add a triangle to the indicated mesh.
+        // If the triangle's points already exist, reuse them.
+        private void AddTriangle(MeshGeometry3D mesh, Point3D point1, Point3D point2, Point3D point3)
+        {
+            // Get the points' indices.
+            int index1 = AddPoint(mesh.Positions, mesh.TextureCoordinates, point1);
+            int index2 = AddPoint(mesh.Positions, mesh.TextureCoordinates, point2);
+            int index3 = AddPoint(mesh.Positions, mesh.TextureCoordinates, point3);
+
+            // Create the triangle.
+            mesh.TriangleIndices.Add(index1);
+            mesh.TriangleIndices.Add(index2);
+            mesh.TriangleIndices.Add(index3);
+        }
+
+        // A dictionary to hold points for fast lookup.
+        private Dictionary<Point3D, int> PointDictionary =
+            new Dictionary<Point3D, int>();
+
+        // If the point already exists, return its index.
+        // Otherwise create the point and return its new index.
+        private int AddPoint(Point3DCollection points,
+            PointCollection texture_coords, Point3D point)
+        {
+            // If the point is in the point dictionary,
+            // return its saved index.
+            if (PointDictionary.ContainsKey(point))
+                return PointDictionary[point];
+
+            // We didn't find the point. Create it.
+            points.Add(point);
+            PointDictionary.Add(point, points.Count - 1);
+
+            // Set the point's texture coordinates.
+            texture_coords.Add(
+                new Point(
+                    (point.X - xmin) * texture_xscale,
+                    (point.Y - ymin) * texture_yscale));
+
+            // Return the new point's index.
+            return points.Count - 1;
+        }
+
+        private void modelForIntersection()
+        {
+            const int xwidth = 1185;
+            const int ywidth = 420;
+            const double dx = 2*(xmax - xmin) / xwidth;
+            const double dy = 2*(ymax - ymin) / ywidth;
+            double[,] values = new double[xwidth, ywidth];          
+
+            // Make a mesh to hold the surface.
+            MeshGeometry3D mesh = new MeshGeometry3D();
+
+            // Make the surface's points and triangles.
+            for (double x = xmin; x <= xmax - dx; x += dx)
+            {
+                for (double y = ymin; y <= ymax - dy; y += dx)
+                {
+                    // Make points at the corners of the surface
+                    // over (x, z) - (x + dx, z + dz).
+                    Point3D p00 = new Point3D(x, y, 0);
+                    Point3D p10 = new Point3D(x + dx, y, 0);
+                    Point3D p01 = new Point3D(x, y+dy, 0);
+                    Point3D p11 = new Point3D(x + dx, y+dy, 0);
+
+                    // Add the triangles.
+                    AddTriangle(mesh, p00, p01, p11);
+                    AddTriangle(mesh, p00, p11, p10);
+                }
+            }
+
+            //rectangleMesh = mesh.Clone();
+            rectangleMesh = mesh;
+
+            Material material = new DiffuseMaterial(new SolidColorBrush(Colors.Red));
+
+            GeometryModel3D surface_model = new GeometryModel3D(mesh, material);
+
+            surface_model.BackMaterial = material;
+
+            groupModel.Children.Add(surface_model);
+
+            device3D.Content = groupModel;
+
+            // Add to view port
+            this.viewPort3d.Children.Add(device3D);
+            this.viewPort3d.ZoomExtents();
+        }
+
+        private void ExportTxtBtnClick(object sender, RoutedEventArgs e)
+        {
+
+            Point3DCollection modelMeshPositions = modelMesh.Positions;
+            Point3DCollection recMeshPositions = rectangleMesh.Positions;
+
+            Point3DCollection intersection = new Point3DCollection();
+
+            MeshBuilder meshb = new MeshBuilder();
+
+            foreach(Point3D modelPoint in modelMeshPositions)
+            {
+                foreach(Point3D recPoint in recMeshPositions)
+                {
+
+                    if ((Math.Round(modelPoint.X) == Math.Round(recPoint.X)) && (Math.Round(modelPoint.Y) == Math.Round(recPoint.Y)))
+                    {
+                        intersection.Add(modelPoint);
+                        meshb.Positions.Add(modelPoint);
+                    }
+                }
+            }
+
+            MeshGeometry3D newmesh = new MeshGeometry3D();
+
+            newmesh = meshb.ToMesh();
+
+            Material material = new DiffuseMaterial(new SolidColorBrush(Colors.Red));
+
+            GeometryModel3D surface_model = new GeometryModel3D(newmesh, material);
+
+            groupModel.Children.Clear();
+            this.viewPort3d.Children.Remove(device3D);
+
+            groupModel.Children.Add(surface_model);
+
+            device3D.Content = groupModel;
+
+            // Add to view port
+            this.viewPort3d.Children.Add(device3D);
+            this.viewPort3d.ZoomExtents();            
+
         }
     }
 }

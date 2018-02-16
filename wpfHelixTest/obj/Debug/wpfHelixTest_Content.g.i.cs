@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/savebtn.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("automapper.net4.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("accord.dll.config")]
 
 

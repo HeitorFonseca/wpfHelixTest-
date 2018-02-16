@@ -39,18 +39,27 @@
                         <ColumnDefinition Width="45*"/>
                         <ColumnDefinition Width="349*"/>
                     </Grid.ColumnDefinitions>
-                    <helix:HelixViewport3D x:Name="viewPort3d"  Margin="24.333,62,220.001,15" MinWidth="150" MaxWidth="800" MinHeight="212" Grid.Column="1" >
+                    <!--<helix:HelixViewport3D x:Name="viewPort3d"  Margin="24.333,62,220.001,15" MinWidth="150" MaxWidth="800" MinHeight="212" Grid.Column="1" 
+                                           IsMoveEnabled="False" IsRotationEnabled="False" ShowCoordinateSystem="False" ShowViewCube="False" >-->
+                    <helix:HelixViewport3D x:Name="viewPort3d"  Margin="24.333,62,220.001,15" MinWidth="150" MaxWidth="800" MinHeight="212" Grid.Column="1" 
+                                            >
                         <!-- Remember to add light to the scene -->
                         <helix:DefaultLights/>
 
+                        <helix:HelixViewport3D.Camera>
+                            <PerspectiveCamera LookDirection="0,0,-1" >
+                                
+                            </PerspectiveCamera>
+                        </helix:HelixViewport3D.Camera>
                     </helix:HelixViewport3D>
+                    
                     <Grid Height="324" VerticalAlignment="Top" Margin="0,0,-0.999,-3" HorizontalAlignment="Left" Width="789" Grid.ColumnSpan="2">
                         <Button x:Name="loadStl_btn" Content="Load Stl Model"  HorizontalAlignment="Left" Margin="8,0,0,198" VerticalAlignment="bottom" Width="80" Click="LoadStlBntClick" FontSize="9"/>
                         <Button x:Name="loadSensors_btn" Content="Load sensors" HorizontalAlignment="Left" Margin="8,0,0,177" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" Click="LoadSensorsBtnClick" FontSize="9"/>
                         <Button x:Name="start_btn" Content="Start" HorizontalAlignment="Left" Margin="8,0,0,156" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9" Click="StartBtnClick"/>
                         <Button x:Name="stop_btn" Content="Stop" HorizontalAlignment="Left" Margin="8,0,0,135" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
-                        <Button x:Name="exportCsv_btn" Content="Export csv" HorizontalAlignment="Left" Margin="8,0,0,114" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
-                        <Button x:Name="exportTxt_btn" Content="Export txt" HorizontalAlignment="Left" Margin="8,0,0,93" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9"/>
+                        <Button x:Name="exportCsv_btn" Content="Export csv" HorizontalAlignment="Left" Margin="8,0,0,114" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9" Click="ExportCsvBtnClick"/>
+                        <Button x:Name="exportTxt_btn" Content="Export txt" HorizontalAlignment="Left" Margin="8,0,0,93" VerticalAlignment="bottom" Width="80" RenderTransformOrigin="0.5,0.5" FontSize="9" Click="ExportTxtBtnClick"/>
                     </Grid>
                     <DataGrid x:Name="SensorsInfoDataGrid" Margin="0,62,10.001,20" HorizontalAlignment="Right" VerticalAlignment="Stretch" Height="Auto" Width="Auto" RenderTransformOrigin="0.5,0.5" MaxWidth="400" FontSize="9" Grid.Column="1">
 

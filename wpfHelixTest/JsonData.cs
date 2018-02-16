@@ -24,33 +24,6 @@ namespace wpfHelixTest
 
     }
 
-    public class Values
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string sensorid { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string ts { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double value { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string parameter { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string status { get; set; }
-    }
 
     public class OpticalSensor
     {
