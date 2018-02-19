@@ -161,12 +161,10 @@ namespace wpfHelixTest
                 device3D.Content = groupModel;
 
                 // Add to view port
-                this.viewPort3d.Children.Add(device3D);
-                this.viewPort3d.ZoomExtents();
+                //this.viewPort3d.Children.Add(device3D);
+                //this.viewPort3d.ZoomExtents();
 
-                ModelLPoints lp = new ModelLPoints();
 
-                lp.BuildDic(modelMesh);
             }
         }
 
@@ -520,29 +518,31 @@ namespace wpfHelixTest
         private void ExportTxtBtnClick(object sender, RoutedEventArgs e)
         {
 
-            Point3DCollection modelMeshPositions = modelMesh.Positions;
-            Point3DCollection recMeshPositions = rectangleMesh.Positions;
+            //Point3DCollection modelMeshPositions = modelMesh.Positions;
+            //Point3DCollection recMeshPositions = rectangleMesh.Positions;
 
-            Point3DCollection intersection = new Point3DCollection();
+            //Point3DCollection intersection = new Point3DCollection();
 
-            MeshBuilder meshb = new MeshBuilder();
+            //MeshBuilder meshb = new MeshBuilder();
 
-            foreach(Point3D modelPoint in modelMeshPositions)
-            {
-                foreach(Point3D recPoint in recMeshPositions)
-                {
+            //foreach(Point3D modelPoint in modelMeshPositions)
+            //{
+            //    foreach(Point3D recPoint in recMeshPositions)
+            //    {
 
-                    if ((Math.Round(modelPoint.X) == Math.Round(recPoint.X)) && (Math.Round(modelPoint.Y) == Math.Round(recPoint.Y)))
-                    {
-                        intersection.Add(modelPoint);
-                        meshb.Positions.Add(modelPoint);
-                    }
-                }
-            }
+            //        if ((Math.Round(modelPoint.X) == Math.Round(recPoint.X)) && (Math.Round(modelPoint.Y) == Math.Round(recPoint.Y)))
+            //        {
+            //            intersection.Add(modelPoint);
+            //            meshb.Positions.Add(modelPoint);
+            //        }
+            //    }
+            //}
 
             MeshGeometry3D newmesh = new MeshGeometry3D();
 
-            newmesh = meshb.ToMesh();
+            ModelLPoints lp = new ModelLPoints();
+
+            newmesh = lp.BuildDic(modelMesh);
 
             Material material = new DiffuseMaterial(new SolidColorBrush(Colors.Red));
 
@@ -550,6 +550,7 @@ namespace wpfHelixTest
 
             groupModel.Children.Clear();
             this.viewPort3d.Children.Remove(device3D);
+            surface_model.BackMaterial = material;
 
             groupModel.Children.Add(surface_model);
 
@@ -557,7 +558,9 @@ namespace wpfHelixTest
 
             // Add to view port
             this.viewPort3d.Children.Add(device3D);
-            this.viewPort3d.ZoomExtents();            
+            this.viewPort3d.ZoomExtents();
+
+            lp.FillSensorDataDictionary(sensorsDataList);
 
         }
     }
