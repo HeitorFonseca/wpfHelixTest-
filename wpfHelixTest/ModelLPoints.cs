@@ -12,9 +12,16 @@ namespace wpfHelixTest
 {
     public class ModelLPoints
     {
+        public MeshBuilder modelMeshBuilder = new MeshBuilder(true, true);
+
         private Dictionary<Point3D, int> PointDictionary = new Dictionary<Point3D, int>();
 
         public SortedDictionary<Tuple<int, int>, double> dic = new SortedDictionary<Tuple<int, int>, double>();
+
+        private int offsetX { get; set; }
+        private int offsetY { get; set; }
+
+        private double averageValue {get; set; }
 
         public ModelLPoints()
         {
@@ -62,18 +69,6 @@ namespace wpfHelixTest
 
             for (int i = 0; i < newMesh.TriangleIndices.Count; i += 3)
             {
-                //// Add the 3 points of the triangle in dictionary
-                //for (int j = i; j < 3; j++)
-                //{
-                //    int index = newMesh.TriangleIndices[j];
-                //    Point3D point = newMesh.Positions[index];
-
-                //    int newX = Convert.ToInt32(Math.Round(point.X));
-                //    int newY = Convert.ToInt32(Math.Round(point.Y));
-
-                //    Tuple<int, int> key = new Tuple<int, int>(newX, newY);
-                //    dic.Add(key, Math.Floor(point.Z));
-                //}
 
                 int index0 = newMesh.TriangleIndices[i];
                 int index1 = newMesh.TriangleIndices[i + 1];
@@ -83,15 +78,18 @@ namespace wpfHelixTest
                 Point3D p1 = newMesh.Positions[index1];
                 Point3D p2 = newMesh.Positions[index2];
 
+                
                 // Add the rest of the points of the triangle in dictionary
-                PointsOfTriangle(p0, p1, p2);
+                PointsOfTriangle(p0, p1, p2, newMesh, i);
             }
-            
+
+            this.offsetX = Convert.ToInt32(newMesh.Bounds.X);
+            this.offsetY = Convert.ToInt32(newMesh.Bounds.Y);
 
             return newMesh;
         }
 
-        void PointsOfTriangle(Point3D p0, Point3D p1, Point3D p2)
+        void PointsOfTriangle(Point3D p0, Point3D p1, Point3D p2, MeshGeometry3D newMesh, int i)
         {
             int maxX = Convert.ToInt32(Math.Max(p0.X, Math.Max(p1.X, p2.X)));
             int minX = Convert.ToInt32(Math.Min(p0.X, Math.Min(p1.X, p2.X)));
@@ -110,25 +108,21 @@ namespace wpfHelixTest
                     double s = (double)CrossProduct(q, vs2) / CrossProduct(vs1, vs2);
                     double t = (double)CrossProduct(vs1, q) / CrossProduct(vs1, vs2);
                     if ((s >= 0) && (t >= 0) && (s + t <= 1))
-                    {
-
-                        //int newX = Convert.ToInt32(Math.Round(x));
-                        //int newY = Convert.ToInt32(Math.Round(y));
-
+                    {                    
+                        //Tuple<int, int> key = new Tuple<int, int>(x - this.offsetX), y - this.offsetY);
                         Tuple<int, int> key = new Tuple<int, int>(x, y);
 
-                        if(!dic.ContainsKey(key))
-                        dic.Add(key, Math.Floor(q.Z));
+                        if (!dic.ContainsKey(key))
+                        {
+                            dic.Add(key, Math.Floor(q.Z));
+                            
+                            modelMeshBuilder.Positions.Add(new Point3D(x, y, q.Z));
+                            modelMeshBuilder.Normals.Add(newMesh.Normals[i]);
+                            modelMeshBuilder.TextureCoordinates.Add(newMesh.TextureCoordinates[i]);
+                        }
                     }
                 }
             }
-        }
-
-        double CrossProduct(Point3D p1, Point3D p2)
-        {
-
-            //std::cout << "crossProduct p1.x " << p1.x << " p2.y " << p2.y << " p1.y " << p1.y << " p2.x " << p2.x << std::endl;
-            return p1.X * p2.Y - p1.Y * p2.X;
         }
 
         public void FillSensorDataDictionary(List<SensorsData> sensorsDataList)
@@ -146,35 +140,143 @@ namespace wpfHelixTest
                 int x = Convert.ToInt32(Math.Round(sd.x));
                 int y = Convert.ToInt32(Math.Round(sd.y));
 
+                //Tuple<int, int> key = new Tuple<int, int>(x - this.offsetX, y - this.offsetY);
                 Tuple<int, int> key = new Tuple<int, int>(x, y);
 
                 newDictionary.Add(key, sd.deltaZ);
 
-                dic.Remove(key);
+                dic[key] = sd.deltaZ;
             }
 
-            while (dic.Count > 0)
-            {
-                int index = dic.Count / 2;
+            PreProcessing(newDictionary);
 
-                KeyValuePair<Tuple<int,int>, double> v = dic.ElementAt(index);
+            //while (dic.Count > 0)
+            //{
+            //    int index = dic.Count / 2;
 
-                List<KeyValuePair<Tuple<int, int>, double>> keyPoints = GetNeighboringPoints(v.Key.Item1, v.Key.Item2, newDictionary);
+            //    KeyValuePair<Tuple<int,int>, double> v = dic.ElementAt(index);
 
-                double value = EuclideanWeightedAverage(keyPoints, newDictionary);
+            //    List<KeyValuePair<Tuple<int, int>, double>> keyPoints = GetNeighboringPoints(v.Key.Item1, v.Key.Item2, newDictionary);
 
-                newDictionary.Add(v.Key, value);
+            //    double value = EuclideanWeightedAverage(keyPoints, newDictionary);
 
-                dic.Remove(v.Key);
-            }
+            //    newDictionary.Add(v.Key, value);
+
+            //    dic.Remove(v.Key);
+            //}
         }
 
-        public List<KeyValuePair<Tuple<int, int>, double>> GetNeighboringPoints(int x, int y, Dictionary<Tuple<int, int>, double> newDictionary)
+        public void PreProcessing(Dictionary<Tuple<int, int>, double> newDictionary)
         {
 
-            List<KeyValuePair<Tuple<int, int>, double>> ret = new List<KeyValuePair<Tuple<int, int>, double>>();
+            Dictionary<Tuple<int, int>, double> sortDic = new Dictionary<Tuple<int, int>, double>();
+            Dictionary<Tuple<int, int>, double> ndic = new Dictionary<Tuple<int, int>, double>();
 
-            SortedDictionary<Tuple<int, int>, double> sortDic = new SortedDictionary<Tuple<int, int>, double>();          
+            foreach (KeyValuePair<Tuple<int, int>, double> v in dic)
+            {
+                int nx = v.Key.Item1;
+                int ny = v.Key.Item2;
+
+
+                //foreach(KeyValuePair<Tuple<int, int>, double> sensor in newDictionary)
+                //{
+                //    int x = sensor.Key.Item1;
+                //    int y = sensor.Key.Item2;
+
+                //    double euclideanDistance = Math.Sqrt(Math.Pow(nx - x, 2) + Math.Pow(ny - y, 2));
+
+                //    sortDic.Add(sensor.Key, euclideanDistance);
+                //}
+
+                //// Order by values.
+                //IEnumerable<KeyValuePair<Tuple<int, int>, double>> items = from pair in sortDic
+                //                                                           orderby pair.Value ascending
+                //                                                           select pair;
+
+                //ndic[v.Key] = (newDictionary[items.ElementAt(0).Key] + newDictionary[items.ElementAt(1).Key]) / 2;
+
+                List<Tuple<int, int>> neighbors = GetNeighboringPoints(nx, ny, newDictionary);
+
+                ndic[v.Key] = (newDictionary[neighbors.ElementAt(0)] + newDictionary[neighbors.ElementAt(1)]) / 2;
+
+                //sortDic.Clear();
+            }
+
+            foreach (KeyValuePair<Tuple<int, int>, double> sd in newDictionary)
+            {
+                int x = Convert.ToInt32((sd.Key.Item1));
+                int y = Convert.ToInt32((sd.Key.Item2));
+
+                //Tuple<int, int> key = new Tuple<int, int>(x - this.offsetX, y - this.offsetY);
+                Tuple<int, int> key = new Tuple<int, int>(x, y);
+                ndic[key] = sd.Value;
+            }
+
+            StartInterpolation(ndic, newDictionary);
+
+        }
+
+        public void StartInterpolation(Dictionary<Tuple<int, int>, double> ndic, Dictionary<Tuple<int, int>, double> sensorDictionary)
+        {
+            this.averageValue = 0.006;
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\Users\heitor.araujo\source\repos\wpfHelixTest\interpolation.txt", true))
+            {
+                foreach (KeyValuePair<Tuple<int, int>, double> item in ndic)
+                {
+                    if (sensorDictionary.ContainsKey(item.Key))
+                    {
+                        continue;
+                    }
+
+                    int x = item.Key.Item1;
+                    int y = item.Key.Item2;
+
+                    List<Tuple<int, int>> neighbors = GetNeighboringPoints(x, y, sensorDictionary);
+
+                    Tuple<int, int> q11 = neighbors[0];
+                    Tuple<int, int> q22 = neighbors[1];
+
+                    Tuple<int, int> q12 = new Tuple<int, int>(neighbors[0].Item1, neighbors[1].Item2);
+                    Tuple<int, int> q21 = new Tuple<int, int>(neighbors[1].Item1, neighbors[0].Item2);
+
+                    double q12Value, q21Value;
+
+                    if (!ndic.ContainsKey(q12))
+                    {
+                        q12Value = averageValue;
+                    }
+                    else
+                    {
+                        q12Value = ndic[q12];
+                    }
+
+                    if (!ndic.ContainsKey(q21))
+                    {
+                        q21Value = averageValue;
+                    }
+                    else
+                    {
+                        q21Value = ndic[q21];
+                    }
+
+                    double ret = BilinearInterpolation(ndic[q11], q12Value, q21Value, ndic[q22], neighbors[0].Item1, neighbors[1].Item1, neighbors[0].Item2, neighbors[1].Item2, x, y);
+
+                    string r = "" + x + " " + y + " " + ret;
+
+                    file.WriteLine(r);
+                }
+            }            
+        }
+
+        public List<Tuple<int, int>> GetNeighboringPoints(int x, int y, Dictionary<Tuple<int, int>, double> newDictionary)
+        {
+
+            List<Tuple<int, int>> ret = new List<Tuple<int, int>>();
+
+            double min1 = double.MaxValue, min2 = double.MaxValue;
+            ret.Add(newDictionary.ElementAt(0).Key);
+            ret.Add(newDictionary.ElementAt(1).Key);
 
             foreach (KeyValuePair<Tuple<int, int>, double> v in newDictionary)
             {
@@ -183,38 +285,40 @@ namespace wpfHelixTest
 
                 double euclideanDistance = Math.Sqrt(Math.Pow(nx-x, 2) + Math.Pow(ny-y, 2));
 
-                sortDic.Add(v.Key, euclideanDistance);               
+                if (euclideanDistance < min1)
+                {
+                    min2 = min1;
+                    min1 = euclideanDistance;
+
+                    ret[1] = ret[0];
+                    ret[0] = v.Key;
+                    
+                }
+                else if (euclideanDistance < min2)
+                {
+                    min2 = euclideanDistance;
+                    ret[1] = v.Key;
+                }
             }
 
-            // Order by values.
-            // ... Use LINQ to specify sorting by value.
-            IEnumerable<KeyValuePair<Tuple<int, int>, double>> items = from pair in sortDic
-                                                                        orderby pair.Value ascending
-                                                                        select pair;
-
-            ret.Add(items.ElementAt(0));
-            ret.Add(items.ElementAt(1));
-            ret.Add(items.ElementAt(2));
-            ret.Add(items.ElementAt(3));
-
             return ret;
-        }
+        }        
 
-        public double EuclideanWeightedAverage(List<KeyValuePair<Tuple<int, int>, double>> keys, Dictionary<Tuple<int, int>, double> nDic)
-        {
+        //public double EuclideanWeightedAverage(List<KeyValuePair<Tuple<int, int>, double>> keys, Dictionary<Tuple<int, int>, double> nDic)
+        //{
 
-            double w1 = 1/keys.ElementAt(0).Value;
-            double w2 = 1/keys.ElementAt(1).Value;
-            double w3 = 1/keys.ElementAt(2).Value;
-            double w4 = 1/keys.ElementAt(3).Value;
+        //    double w1 = 1/keys.ElementAt(0).Value;
+        //    double w2 = 1/keys.ElementAt(1).Value;
+        //    double w3 = 1/keys.ElementAt(2).Value;
+        //    double w4 = 1/keys.ElementAt(3).Value;
 
-            double num = (w1 * nDic[keys.ElementAt(0).Key] + w2 * nDic[keys.ElementAt(1).Key] + w3 * nDic[keys.ElementAt(2).Key] + w4* nDic[keys.ElementAt(3).Key]);
-            double den = w1 + w2 + w3 + w4;
+        //    double num = (w1 * nDic[keys.ElementAt(0).Key] + w2 * nDic[keys.ElementAt(1).Key] + w3 * nDic[keys.ElementAt(2).Key] + w4* nDic[keys.ElementAt(3).Key]);
+        //    double den = w1 + w2 + w3 + w4;
 
-            return num / den;
-        }
+        //    return num / den;
+        //}
 
-        public double BilinearInterpolation(float q11, float q12, float q21, float q22, float x1, float x2, float y1, float y2, float x, float y)
+        public double BilinearInterpolation(double q11, double q12, double q21, double q22, float x1, float x2, float y1, float y2, float x, float y)
         {
             float x2x1, y2y1, x2x, y2y, yy1, xx1;
             x2x1 = x2 - x1;
@@ -225,5 +329,14 @@ namespace wpfHelixTest
             xx1 = x - x1;
             return 1.0 / (x2x1 * y2y1) * (q11 * x2x * y2y + q21 * xx1 * y2y + q12 * x2x * yy1 + q22 * xx1 * yy1);
         }
+
+        double CrossProduct(Point3D p1, Point3D p2)
+        {
+
+            //std::cout << "crossProduct p1.x " << p1.x << " p2.y " << p2.y << " p1.y " << p1.y << " p2.x " << p2.x << std::endl;
+            return p1.X * p2.Y - p1.Y * p2.X;
+        }
+
     }
 }
+

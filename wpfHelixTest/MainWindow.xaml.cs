@@ -495,7 +495,7 @@ namespace wpfHelixTest
                     AddTriangle(mesh, p00, p01, p11);
                     AddTriangle(mesh, p00, p11, p10);
                 }
-            }
+            }            
 
             //rectangleMesh = mesh.Clone();
             rectangleMesh = mesh;
