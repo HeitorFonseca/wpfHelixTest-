@@ -550,18 +550,21 @@ namespace wpfHelixTest
 
             groupModel.Children.Clear();
             this.viewPort3d.Children.Remove(device3D);
+
             surface_model.BackMaterial = material;
 
             groupModel.Children.Add(surface_model);
 
             device3D.Content = groupModel;
 
+            Point3DCollection pc = lp.FillSensorDataDictionary(sensorsDataList);
+
+            var vis = new PointsVisual3D() { Points = pc };
             // Add to view port
-            this.viewPort3d.Children.Add(device3D);
+            //this.viewPort3d.Children.Add(device3D);
+            this.viewPort3d.Children.Add(vis);
+
             this.viewPort3d.ZoomExtents();
-
-            lp.FillSensorDataDictionary(sensorsDataList);
-
         }
     }
 }

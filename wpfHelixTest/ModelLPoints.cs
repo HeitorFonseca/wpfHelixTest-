@@ -12,11 +12,17 @@ namespace wpfHelixTest
 {
     public class ModelLPoints
     {
+        public static ModelVisual3D device3D;
+
         public MeshBuilder modelMeshBuilder = new MeshBuilder(true, true);
 
         private Dictionary<Point3D, int> PointDictionary = new Dictionary<Point3D, int>();
 
         public SortedDictionary<Tuple<int, int>, double> dic = new SortedDictionary<Tuple<int, int>, double>();
+
+        PointGeometryBuilder pointGeometryBuilder = new PointGeometryBuilder(device3D);
+
+        Point3DCollection pointsCollection = new Point3DCollection();
 
         private int offsetX { get; set; }
         private int offsetY { get; set; }
@@ -65,28 +71,30 @@ namespace wpfHelixTest
                 p2.Z = Math.Round(p2.Z );
 
                 newMesh.Positions[index2] = p2;
-            }
 
-            for (int i = 0; i < newMesh.TriangleIndices.Count; i += 3)
-            {
-
-                int index0 = newMesh.TriangleIndices[i];
-                int index1 = newMesh.TriangleIndices[i + 1];
-                int index2 = newMesh.TriangleIndices[i + 2];
-                             
-                Point3D p0 = newMesh.Positions[index0];
-                Point3D p1 = newMesh.Positions[index1];
-                Point3D p2 = newMesh.Positions[index2];
-
-                
-                // Add the rest of the points of the triangle in dictionary
                 PointsOfTriangle(p0, p1, p2, newMesh, i);
             }
+
+            //for (int i = 0; i < newMesh.TriangleIndices.Count; i += 3)
+            //{
+
+            //    int index0 = newMesh.TriangleIndices[i];
+            //    int index1 = newMesh.TriangleIndices[i + 1];
+            //    int index2 = newMesh.TriangleIndices[i + 2];
+                             
+            //    Point3D p0 = newMesh.Positions[index0];
+            //    Point3D p1 = newMesh.Positions[index1];
+            //    Point3D p2 = newMesh.Positions[index2];
+                
+            //    // Add the rest of the points of the triangle in dictionary
+            //    PointsOfTriangle(p0, p1, p2, newMesh, i);
+            //}
 
             this.offsetX = Convert.ToInt32(newMesh.Bounds.X);
             this.offsetY = Convert.ToInt32(newMesh.Bounds.Y);
 
-            return newMesh;
+            //return newMesh;
+            return mesh;
         }
 
         void PointsOfTriangle(Point3D p0, Point3D p1, Point3D p2, MeshGeometry3D newMesh, int i)
@@ -125,7 +133,7 @@ namespace wpfHelixTest
             }
         }
 
-        public void FillSensorDataDictionary(List<SensorsData> sensorsDataList)
+        public Point3DCollection FillSensorDataDictionary(List<SensorsData> sensorsDataList)
         {
 
             Dictionary<Tuple<int, int>, double> newDictionary = new Dictionary<Tuple<int, int>, double>();
@@ -164,6 +172,8 @@ namespace wpfHelixTest
 
             //    dic.Remove(v.Key);
             //}
+
+            return pointsCollection;
         }
 
         public void PreProcessing(Dictionary<Tuple<int, int>, double> newDictionary)
@@ -212,10 +222,12 @@ namespace wpfHelixTest
                 ndic[key] = sd.Value;
             }
 
-            StartInterpolation(ndic, newDictionary);
+            //StartInterpolation(ndic, newDictionary);
 
+            StartInterpolation2(ndic, newDictionary);
         }
 
+        // using two sensors
         public void StartInterpolation(Dictionary<Tuple<int, int>, double> ndic, Dictionary<Tuple<int, int>, double> sensorDictionary)
         {
             this.averageValue = 0.006;
@@ -267,6 +279,88 @@ namespace wpfHelixTest
                     file.WriteLine(r);
                 }
             }            
+        }
+
+        // using one sensor
+        public void StartInterpolation2(Dictionary<Tuple<int, int>, double> ndic, Dictionary<Tuple<int, int>, double> sensorDictionary)
+        {
+            Dictionary<Tuple<int, int>, double> resultDic = new Dictionary<Tuple<int, int>, double>();
+
+            this.averageValue = 0.006;
+
+            foreach(KeyValuePair<Tuple<int, int>, double> item in ndic)
+            //for (int i = 0; i < ndic.Count; i++)
+            {
+                //KeyValuePair<Tuple<int, int>, double> item = ndic.ElementAt(i);
+
+                int x = item.Key.Item1;
+                int y = item.Key.Item2;
+
+                if (sensorDictionary.ContainsKey(item.Key))
+                {
+                    pointsCollection.Add(new Point3D(item.Key.Item1, item.Key.Item2, sensorDictionary[item.Key]));
+                    resultDic.Add(item.Key, sensorDictionary[item.Key]);
+                    continue;
+                }
+
+
+                Tuple<int, int> neighbor = GetNeighboringPoints2(x, y, sensorDictionary);
+
+                List<Tuple<int, int>> qs = CheckPoints(x, y, neighbor.Item1, neighbor.Item2);
+
+                Tuple<int, int> q11 = qs[0];
+                Tuple<int, int> q12 = qs[1];
+                Tuple<int, int> q21 = qs[2];
+                Tuple<int, int> q22 = qs[3];
+
+
+                double q11Value, q12Value, q21Value, q22Value;
+                //Q11
+                if (!ndic.ContainsKey(q11))
+                {
+                    q11Value = averageValue;
+                }
+                else
+                {
+                    q11Value = ndic[q11];
+                }
+                //Q12
+                if (!ndic.ContainsKey(q12))
+                {
+                    q12Value = averageValue;
+                }
+                else
+                {
+                    q12Value = ndic[q12];
+                }
+                //Q21
+                if (!ndic.ContainsKey(q21))
+                {
+                    q21Value = averageValue;
+                }
+                else
+                {
+                    q21Value = ndic[q21];
+                }
+                //Q22
+                if (!ndic.ContainsKey(q22))
+                {
+                    q22Value = averageValue;
+                }
+                else
+                {
+                    q22Value = ndic[q22];
+                }
+
+                double ret = BilinearInterpolation(q11Value, q12Value, q21Value, q22Value, q11.Item1, q22.Item1, q11.Item2, q22.Item2, x, y);
+
+                pointsCollection.Add(new Point3D(item.Key.Item1, item.Key.Item2, ret));
+                resultDic.Add(item.Key, ret);
+                //ndic[item.Key] = ret;                   
+            }
+
+            Point3DCollection np = pointGeometryBuilder.CreatePositions(pointsCollection);
+            Int32Collection indices = pointGeometryBuilder.CreateIndices(pointsCollection.Count);
         }
 
         public List<Tuple<int, int>> GetNeighboringPoints(int x, int y, Dictionary<Tuple<int, int>, double> newDictionary)
@@ -337,6 +431,123 @@ namespace wpfHelixTest
             return p1.X * p2.Y - p1.Y * p2.X;
         }
 
+        public Tuple<int, int> GetNeighboringPoints2(int x, int y, Dictionary<Tuple<int, int>, double> newDictionary)
+        {
+
+            Tuple<int, int> coord;
+
+            double min1 = double.MaxValue;
+            coord = newDictionary.ElementAt(0).Key;
+
+            foreach (KeyValuePair<Tuple<int, int>, double> v in newDictionary)
+            {
+                int nx = v.Key.Item1;
+                int ny = v.Key.Item2;
+
+                double euclideanDistance = Math.Sqrt(Math.Pow(nx - x, 2) + Math.Pow(ny - y, 2));
+
+                if (euclideanDistance < min1)
+                {
+                    min1 = euclideanDistance;
+                    coord = v.Key;
+                }                
+            }
+
+            return coord;
+        }
+
+        List<Tuple<int, int>> CheckPoints(int x, int y, int qx, int qy)
+        {
+            List<Tuple<int, int>> ret = new List<Tuple<int, int>>();
+
+            Tuple<int, int> q11 = null;
+            Tuple<int, int> q22 = null;
+
+            Tuple<int, int> q12 = null;
+            Tuple<int, int> q21 = null;
+
+            //Find Q11 and sensor is Q22
+            if (x < qx && y < qy)
+            {
+                q11 = new Tuple<int, int>(x - 1, y - 1);
+                q22 = new Tuple<int, int>(qx, qy);
+
+                q12 = new Tuple<int, int>(x - 1, qy);
+                q21 = new Tuple<int, int>(qx, y - 1);
+
+            }
+            //Find Q22 and sensor is Q11
+            else if (x > qx && y > qy)
+            {
+                q11 = new Tuple<int, int>(qx, qy);                
+                q22 = new Tuple<int, int>(x + 1, y + 1);
+
+                q12 = new Tuple<int, int>(qx, y + 1);
+                q21 = new Tuple<int, int>(x+1, qy);
+            }
+            // Sensor is Q21 and find Q12
+            else if (x < qx && y > qy)
+            {
+                q21 = new Tuple<int, int>(qx, qy);
+                q12 = new Tuple<int, int>(x - 1, y + 1);
+
+                q11 = new Tuple<int, int>(x - 1, qy);
+                q22 = new Tuple<int, int>(qx, y + 1);
+            }
+            // Sensor is Q12 and find Q21
+            else if (x > qx && y < qy)
+            {
+                q12 = new Tuple<int, int>(qx, qy);
+                q21 = new Tuple<int, int>(x + 1, y - 1);
+
+                q22 = new Tuple<int, int>(x + 1, qy);
+                q11 = new Tuple<int, int>(qx, y - 1);
+            }
+            else if (x == qx && y < qy)
+            {
+                q12 = new Tuple<int, int>(qx, qy);
+                q11 = new Tuple<int, int>(x, y - 1);
+
+                q22 = new Tuple<int, int>(x + 1, qy);
+                q21 = new Tuple<int, int>(x + 1, y - 1);
+            }
+
+            else if (x == qx && y > qy)
+            {
+                q11 = new Tuple<int, int>(qx, qy);
+                q12 = new Tuple<int, int>(x, y + 1);
+
+                q21 = new Tuple<int, int>(x + 1, qy);
+                q22 = new Tuple<int, int>(x + 1, y + 1);
+            }
+            else if (y == qy && x < qx)
+            {
+                q12 = new Tuple<int, int>(x - 1, qy);
+                q22 = new Tuple<int, int>(qx, qy);
+
+                q11 = new Tuple<int, int>(x - 1, y - 1);
+                q21 = new Tuple<int, int>(qx, y - 1);
+            }
+            else if (y == qy && x > qx)
+            {
+                q22 = new Tuple<int, int>(x + 1, qy);
+                q12 = new Tuple<int, int>(qx, qy);
+
+                q11 = new Tuple<int, int>(qx, y - 1);
+                q21 = new Tuple<int, int>(x + 1, y - 1);
+            }
+            else
+            {
+
+            }
+
+            ret.Add(q11);
+            ret.Add(q12);
+            ret.Add(q21);
+            ret.Add(q22);
+
+            return ret;
+        }
     }
 }
 
